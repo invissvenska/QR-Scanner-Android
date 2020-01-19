@@ -52,6 +52,14 @@ captures/
 /.idea/dictionaries
 .idea/libraries
 /.idea/libraries
+.idea/.name
+.idea/misc.xml
+.idea/runConfigurations.xml
+.idea/codeStyles/Project.xml
+/.idea/.name
+/.idea/misc.xml
+/.idea/runConfigurations.xml
+/.idea/codeStyles/Project.xml
 
 # Android Studio 3 in .gitignore file.
 .idea/caches
