@@ -18,16 +18,20 @@ import com.google.zxing.Result;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class MainActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+
+    @BindView(R.id.scanner)
     ZXingScannerView scanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        scanner = findViewById(R.id.scanner);
+        ButterKnife.bind(this);
         setScannerProperties();
 
     }
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     public void handleResult(Result result) {
         if (result != null) {
 
-            RoundedBottomSheetDialogFragment mySheetDialog = new RoundedBottomSheetDialogFragment(new RoundedBottomSheetDialogFragment.ClickOnFirst() {
+            RoundedBottomSheetDialogFragment mySheetDialog = new RoundedBottomSheetDialogFragment(result.getText(), new RoundedBottomSheetDialogFragment.ClickOnFirst() {
                 @Override
                 public void onClickOnFirst() {
                     Toast.makeText(getApplicationContext(), "clickk", Toast.LENGTH_LONG).show();
@@ -94,19 +98,6 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             });
             FragmentManager fm = getSupportFragmentManager();
             mySheetDialog.show(fm, "modalSheetDialog");
-
-//            new AlertDialog.Builder(getApplicationContext())
-//                    .setTitle("Result")
-//                    .setMessage(result.getText())
-//                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            // Continue with delete operation
-//                        }
-//                    })
-//                    .setNegativeButton(android.R.string.no, null)
-//                    .show();
-
-//            Toast.makeText(this, result.getText(), Toast.LENGTH_LONG).show();
         }
     }
 
