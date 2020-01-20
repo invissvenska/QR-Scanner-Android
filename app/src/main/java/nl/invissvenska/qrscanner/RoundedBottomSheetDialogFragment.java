@@ -21,11 +21,11 @@ public class RoundedBottomSheetDialogFragment extends BottomSheetDialogFragment 
     @BindView(R.id.content)
     TextView tvContent;
     @BindView(R.id.openBrowser)
-    LinearLayout llOpenBrowser;
+    TextView llOpenBrowser;
     @BindView(R.id.shareResult)
-    LinearLayout llShareResult;
+    TextView llShareResult;
     @BindView(R.id.copyResult)
-    LinearLayout llCopyResult;
+    TextView llCopyResult;
 
     private String content;
     private OpenBrowser openBrowser;

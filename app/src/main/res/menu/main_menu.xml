@@ -6,6 +6,6 @@
         android:id="@+id/flash"
         android:icon="@drawable/ic_flash_off"
         android:orderInCategory="200"
-        android:title="Flash"
+        android:title="@string/toolbar_flash"
         app:showAsAction="always" />
 </menu>

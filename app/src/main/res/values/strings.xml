@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">QR Scanner</string>
     <string name="tile_name">QR Scanner</string>
+    <string name="copied_result">Result copied to clipboard</string>
+    <string name="share_title">Choose your app</string>
+    <string name="modal_result_title">Result</string>
+    <string name="modal_option_browser">Open site</string>
+    <string name="modal_option_share">Share</string>
+    <string name="modal_option_copy">Copy</string>
+    <string name="toolbar_flash">Flash</string>
 </resources>

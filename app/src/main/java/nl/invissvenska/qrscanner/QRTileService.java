@@ -7,10 +7,9 @@ public class QRTileService extends TileService {
     @Override
     public void onClick() {
         super.onClick();
-        Intent calendarIntent = new Intent(Intent.ACTION_EDIT);
-        calendarIntent.setType("vnd.android.cursor.item/event");
-
-        startActivityAndCollapse(calendarIntent);
+        Intent intent = new Intent("nl.invissvenska.qrscanner.MainActivity");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivityAndCollapse(intent);
     }
 
     @Override
@@ -21,7 +20,6 @@ public class QRTileService extends TileService {
     @Override
     public void onTileAdded() {
         super.onTileAdded();
-        //TODO add more functionality: https://android.jlelse.eu/develop-a-custom-tile-with-quick-settings-tile-api-74073e849457
     }
 
     @Override

@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                 @Override
                 public void onClickShareResult(String result) {
                     copyToClipboard(result);
-                    Toast.makeText(getApplicationContext(), "Result copied to clipboard", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.copied_result), Toast.LENGTH_SHORT).show();
                 }
             }, new RoundedBottomSheetDialogFragment.OnCancel() {
                 @Override
@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     protected void onPause() {
         super.onPause();
+        scanner.stopCameraPreview();
         scanner.stopCamera();
     }
 
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-        startActivity(Intent.createChooser(sharingIntent, "Choose your app"));
+        startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_title)));
     }
 
     private void copyToClipboard(String text) {
