@@ -5,6 +5,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -90,10 +94,21 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     public void handleResult(Result result) {
         if (result != null) {
 
-            RoundedBottomSheetDialogFragment mySheetDialog = new RoundedBottomSheetDialogFragment(result.getText(), new RoundedBottomSheetDialogFragment.ClickOnFirst() {
+            RoundedBottomSheetDialogFragment mySheetDialog = new RoundedBottomSheetDialogFragment(result.getText(), new RoundedBottomSheetDialogFragment.OpenBrowser() {
                 @Override
-                public void onClickOnFirst() {
-                    Toast.makeText(getApplicationContext(), "clickk", Toast.LENGTH_LONG).show();
+                public void onClickOpenBrowser() {
+                    Toast.makeText(getApplicationContext(), "open browser", Toast.LENGTH_LONG).show();
+                }
+            }, new RoundedBottomSheetDialogFragment.ShareResult() {
+                @Override
+                public void onClickShareResult(String result) {
+                    shareIntent(result);
+                }
+            }, new RoundedBottomSheetDialogFragment.CopyResult() {
+                @Override
+                public void onClickShareResult(String result) {
+                    copyToClipboard(result);
+                    Toast.makeText(getApplicationContext(), "Result copied to clipboard", Toast.LENGTH_SHORT).show();
                 }
             });
             FragmentManager fm = getSupportFragmentManager();
@@ -101,18 +116,32 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         }
     }
 
-
-
     @Override
     protected void onPause() {
         super.onPause();
         scanner.stopCamera();
     }
 
+    private void copyToClipboard(String text) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Result", text);
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+        }
+    }
+
+    private void shareIntent(String text) {
+//        String shareBody = "Here is the share content body";
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+//        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(sharingIntent, "Choose your app"));
+    }
+
     /**
      * Resume the camera after 2 seconds when qr code successfully scanned through bar code reader.
      */
-
 //    private void resumeCamera() {
 //        Toast.LENGTH_LONG
 //        Handler handler =  new Handler();
