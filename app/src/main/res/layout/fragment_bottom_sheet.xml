@@ -6,9 +6,6 @@
     android:paddingBottom="8dp"
     android:paddingTop="8dp">
 
-    <!-- NOTE: This list should be displayed in a list
-    instead of nested layouts -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Result"
-            android:textColor="#737373"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="#292929"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -44,10 +42,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textColor="#737373"
+            android:textColor="#292929"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="16sp" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EFEFEF"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
 
     <LinearLayout
         android:id="@+id/openBrowser"
@@ -66,14 +73,14 @@
             android:layout_height="24dp"
             android:layout_marginRight="32dp"
             android:src="@drawable/ic_url"
-            android:tint="#737373" />
+            android:tint="#757575" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Open site"
-            android:textColor="#737373"
+            android:textColor="#292929"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -95,14 +102,14 @@
             android:layout_height="24dp"
             android:layout_marginRight="32dp"
             android:src="@drawable/ic_share"
-            android:tint="#737373" />
+            android:tint="#757575" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Share"
-            android:textColor="#737373"
+            android:textColor="#292929"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -124,14 +131,14 @@
             android:layout_height="24dp"
             android:layout_marginRight="32dp"
             android:src="@drawable/ic_content_copy"
-            android:tint="#737373" />
+            android:tint="#757575" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Copy"
-            android:textColor="#737373"
+            android:textColor="#292929"
             android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

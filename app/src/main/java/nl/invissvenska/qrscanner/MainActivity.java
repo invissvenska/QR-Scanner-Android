@@ -10,6 +10,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,13 +32,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @BindView(R.id.scanner)
     ZXingScannerView scanner;
 
+    RoundedBottomSheetDialogFragment sheetDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setScannerProperties();
-
     }
 
     @Override
@@ -63,10 +65,30 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         }
     }
 
+    private List<BarcodeFormat> getFormats() {
+        List<BarcodeFormat> barcodeFormats = new ArrayList<>();
+        barcodeFormats.add(BarcodeFormat.AZTEC);
+        barcodeFormats.add(BarcodeFormat.CODABAR);
+        barcodeFormats.add(BarcodeFormat.CODE_39);
+        barcodeFormats.add(BarcodeFormat.CODE_93);
+        barcodeFormats.add(BarcodeFormat.CODE_128);
+        barcodeFormats.add(BarcodeFormat.DATA_MATRIX);
+        barcodeFormats.add(BarcodeFormat.EAN_8);
+        barcodeFormats.add(BarcodeFormat.EAN_13);
+        barcodeFormats.add(BarcodeFormat.ITF);
+        barcodeFormats.add(BarcodeFormat.MAXICODE);
+        barcodeFormats.add(BarcodeFormat.PDF_417);
+        barcodeFormats.add(BarcodeFormat.QR_CODE);
+        barcodeFormats.add(BarcodeFormat.RSS_14);
+        barcodeFormats.add(BarcodeFormat.RSS_EXPANDED);
+        barcodeFormats.add(BarcodeFormat.UPC_A);
+        barcodeFormats.add(BarcodeFormat.UPC_E);
+        barcodeFormats.add(BarcodeFormat.UPC_EAN_EXTENSION);
+        return barcodeFormats;
+    }
+
     private void setScannerProperties() {
-        List<BarcodeFormat> lists = new ArrayList<>();
-        lists.add(BarcodeFormat.QR_CODE);
-        scanner.setFormats(lists);
+        scanner.setFormats(getFormats());
         scanner.setLaserColor(getColor(R.color.laserColor));
         scanner.setMaskColor(getColor(R.color.maskColor));
         scanner.setBorderStrokeWidth(getResources().getInteger(R.integer.borderStroke));
@@ -79,13 +101,16 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                String[] myStrings = {Manifest.permission.CAMERA};
-                ActivityCompat.requestPermissions(this, myStrings, 1);
-                return;
-            }
+        if (sheetDialog != null) {
+            sheetDialog.dismiss();
         }
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            String[] myStrings = {Manifest.permission.CAMERA};
+            ActivityCompat.requestPermissions(this, myStrings, 1);
+            return;
+        }
+
         scanner.startCamera();
         scanner.setResultHandler(this);
     }
@@ -94,10 +119,10 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     public void handleResult(Result result) {
         if (result != null) {
 
-            RoundedBottomSheetDialogFragment mySheetDialog = new RoundedBottomSheetDialogFragment(result.getText(), new RoundedBottomSheetDialogFragment.OpenBrowser() {
+            sheetDialog = new RoundedBottomSheetDialogFragment(result.getText(), new RoundedBottomSheetDialogFragment.OpenBrowser() {
                 @Override
-                public void onClickOpenBrowser() {
-                    Toast.makeText(getApplicationContext(), "open browser", Toast.LENGTH_LONG).show();
+                public void onClickOpenBrowser(String result) {
+                    openInBrowser(result);
                 }
             }, new RoundedBottomSheetDialogFragment.ShareResult() {
                 @Override
@@ -110,9 +135,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                     copyToClipboard(result);
                     Toast.makeText(getApplicationContext(), "Result copied to clipboard", Toast.LENGTH_SHORT).show();
                 }
+            }, new RoundedBottomSheetDialogFragment.OnCancel() {
+                @Override
+                public void onCancelDialog() {
+                    onResume();
+                }
             });
             FragmentManager fm = getSupportFragmentManager();
-            mySheetDialog.show(fm, "modalSheetDialog");
+            sheetDialog.show(fm, "modalSheetDialog");
         }
     }
 
@@ -122,6 +152,18 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         scanner.stopCamera();
     }
 
+    private void openInBrowser(String url) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+    }
+
+    private void shareIntent(String text) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(sharingIntent, "Choose your app"));
+    }
+
     private void copyToClipboard(String text) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Result", text);
@@ -129,22 +171,4 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             clipboard.setPrimaryClip(clip);
         }
     }
-
-    private void shareIntent(String text) {
-//        String shareBody = "Here is the share content body";
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-//        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-        startActivity(Intent.createChooser(sharingIntent, "Choose your app"));
-    }
-
-    /**
-     * Resume the camera after 2 seconds when qr code successfully scanned through bar code reader.
-     */
-//    private void resumeCamera() {
-//        Toast.LENGTH_LONG
-//        Handler handler =  new Handler();
-//        handler.postDelayed({ scanner.resumeCameraPreview(this) }, 2000);
-//    }
 }
