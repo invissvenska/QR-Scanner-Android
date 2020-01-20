@@ -99,23 +99,6 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (sheetDialog != null) {
-            sheetDialog.dismiss();
-        }
-
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            String[] myStrings = {Manifest.permission.CAMERA};
-            ActivityCompat.requestPermissions(this, myStrings, 1);
-            return;
-        }
-
-        scanner.startCamera();
-        scanner.setResultHandler(this);
-    }
-
-    @Override
     public void handleResult(Result result) {
         if (result != null) {
 
@@ -147,10 +130,43 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (sheetDialog != null) {
+            sheetDialog.dismiss();
+        }
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            String[] myStrings = {Manifest.permission.CAMERA};
+            ActivityCompat.requestPermissions(this, myStrings, 1);
+            return;
+        }
+
+        scanner.startCamera();
+        scanner.setResultHandler(this);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         scanner.stopCameraPreview();
         scanner.stopCamera();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        scanner.setResultHandler(null);
+        scanner.stopCamera();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (sheetDialog != null) {
+            scanner.setResultHandler(null);
+            scanner.stopCamera();
+        }
     }
 
     private void openInBrowser(String url) {
