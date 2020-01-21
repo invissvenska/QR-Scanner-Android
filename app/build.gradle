@@ -13,15 +13,10 @@ android {
     }
     signingConfigs {
         release {
-            File fileProp = file(System.getenv('HOME') + "/.appkey")
-            if (fileProp.exists()) {
-                Properties releaseConfig = new Properties()
-                releaseConfig.load(new FileInputStream(fileProp))
-                storeFile file(System.getenv('HOME') + "/" + releaseConfig["SIGNING_KEYSTORE"])
-                storePassword System.getenv("SIGNING_KEYSTORE_PASSWORD")
-                keyAlias System.getenv("SIGNING_KEYSTORE_ALIAS")
-                keyPassword System.getenv("SIGNING_KEY_PASSWORD")
-            }
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword System.getenv("SIGNING_KEYSTORE_PASSWORD")
+            keyAlias System.getenv("SIGNING_KEYSTORE_ALIAS")
+            keyPassword System.getenv("SIGNING_KEY_PASSWORD")
         }
     }
     buildTypes {
