@@ -6,26 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class RoundedBottomSheetDialogFragment extends BottomSheetDialogFragment {
-
-    @BindView(R.id.content)
-    TextView tvContent;
-    @BindView(R.id.openBrowser)
-    TextView llOpenBrowser;
-    @BindView(R.id.shareResult)
-    TextView llShareResult;
-    @BindView(R.id.copyResult)
-    TextView llCopyResult;
 
     private String content;
     private OpenBrowser openBrowser;
@@ -49,33 +36,28 @@ public class RoundedBottomSheetDialogFragment extends BottomSheetDialogFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bottom_sheet, container);
-        ButterKnife.bind(this, view);
+
+        TextView tvContent = view.findViewById(R.id.content);
+        TextView tvOpenBrowser = view.findViewById(R.id.openBrowser);
+        TextView tvShareResult = view.findViewById(R.id.shareResult);
+        TextView tvCopyResult = view.findViewById(R.id.copyResult);
 
         tvContent.setText(content);
         if (!URLUtil.isValidUrl(content)) {
-            llOpenBrowser.setVisibility(View.GONE);
+            tvOpenBrowser.setVisibility(View.GONE);
         }
 
-        llOpenBrowser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openBrowser.onClickOpenBrowser(content);
-            }
-        });
+        tvOpenBrowser.setOnClickListener((View v) ->
+                openBrowser.onClickOpenBrowser(content)
+        );
 
-        llShareResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shareResult.onClickShareResult(content);
-            }
-        });
+        tvShareResult.setOnClickListener((View v) ->
+                shareResult.onClickShareResult(content)
+        );
 
-        llCopyResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                copyResult.onClickShareResult(content);
-            }
-        });
+        tvCopyResult.setOnClickListener((View v) ->
+                copyResult.onClickShareResult(content)
+        );
 
         return view;
     }
