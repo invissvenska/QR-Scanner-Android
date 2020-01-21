@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QR Scanner</string>
+    <string name="app_name">QR and Barcode Scanner</string>
     <string name="tile_name">QR Scanner</string>
     <string name="copied_result">Result copied to clipboard</string>
     <string name="share_title">Choose your app</string>
