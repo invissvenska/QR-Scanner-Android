@@ -134,7 +134,9 @@ pipeline {
                     branch 'beta'
                 }
             }
-            sh "rm app/keystore.jks"
+            steps {
+                sh "rm app/keystore.jks"
+            }
         }
 	}
 	post {
