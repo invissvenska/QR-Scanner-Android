@@ -102,28 +102,16 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     public void handleResult(Result result) {
         if (result != null) {
 
-            sheetDialog = new RoundedBottomSheetDialogFragment(result.getText(), new RoundedBottomSheetDialogFragment.OpenBrowser() {
-                @Override
-                public void onClickOpenBrowser(String result) {
-                    openInBrowser(result);
-                }
-            }, new RoundedBottomSheetDialogFragment.ShareResult() {
-                @Override
-                public void onClickShareResult(String result) {
-                    shareIntent(result);
-                }
-            }, new RoundedBottomSheetDialogFragment.CopyResult() {
-                @Override
-                public void onClickShareResult(String result) {
-                    copyToClipboard(result);
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.copied_result), Toast.LENGTH_SHORT).show();
-                }
-            }, new RoundedBottomSheetDialogFragment.OnCancel() {
-                @Override
-                public void onCancelDialog() {
-                    onResume();
-                }
-            });
+            sheetDialog = new RoundedBottomSheetDialogFragment(
+                    result.getText(),
+                    this::openInBrowser,
+                    this::shareIntent,
+                    (String copyResult) -> {
+                        copyToClipboard(copyResult);
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.copied_result), Toast.LENGTH_SHORT).show();
+                    },
+                    this::onResume
+            );
             FragmentManager fm = getSupportFragmentManager();
             sheetDialog.show(fm, "modalSheetDialog");
         }
