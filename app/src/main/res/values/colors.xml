@@ -3,9 +3,7 @@
     <color name="colorPrimary">#38859F</color>
     <color name="colorPrimaryDark">#2A586B</color>
     <color name="colorAccent">#0D1E2E</color>
-
     <color name="colorWhite">#FFFFFF</color>
-
 
     <color name="bottomSheetBackground">@color/colorWhite</color>
     <color name="borderColor">@color/colorWhite</color>

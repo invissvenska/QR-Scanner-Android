@@ -23,14 +23,11 @@ import com.google.zxing.Result;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class MainActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
-    @BindView(R.id.scanner)
-    ZXingScannerView scanner;
+    private ZXingScannerView scanner;
 
     RoundedBottomSheetDialogFragment sheetDialog;
 
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        scanner = findViewById(R.id.scanner);
         setScannerProperties();
     }
 
