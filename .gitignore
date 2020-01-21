@@ -103,3 +103,4 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 /app/debug/output.json
+/.idea/compiler.xml
