@@ -26,6 +26,10 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
     bundle {
         density {
             // Different APKs are generated for devices with different screen densities; true by default.
