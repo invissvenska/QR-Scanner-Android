@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -56,26 +55,17 @@ public class RoundedBottomSheetDialogFragment extends BottomSheetDialogFragment 
             llOpenBrowser.setVisibility(View.GONE);
         }
 
-        llOpenBrowser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openBrowser.onClickOpenBrowser(content);
-            }
-        });
+        llOpenBrowser.setOnClickListener((View v) ->
+                openBrowser.onClickOpenBrowser(content)
+        );
 
-        llShareResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shareResult.onClickShareResult(content);
-            }
-        });
+        llShareResult.setOnClickListener((View v) ->
+                shareResult.onClickShareResult(content)
+        );
 
-        llCopyResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                copyResult.onClickShareResult(content);
-            }
-        });
+        llCopyResult.setOnClickListener((View v) ->
+                copyResult.onClickShareResult(content)
+        );
 
         return view;
     }
