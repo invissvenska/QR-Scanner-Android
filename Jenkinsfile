@@ -102,6 +102,10 @@ pipeline {
 				SIGNING_KEY_PASSWORD = credentials('qrscanner-signing-password')
 			}
 			steps {
+			    withCredentials([file(credentialsId: 'qrscanner-signing-keystore', variable: 'KEYFILE')]) {
+                     sh "cp \$KEYFILE app/keystore.jks"
+                }
+
 				// Build the app in release mode, and sign the AAB using the environment variables
 				sh 'bash ./gradlew app:bundleRelease'
 
@@ -121,6 +125,17 @@ pipeline {
 				}
 			}
 		}
+		stage('Cleanup Credential') {
+            when {
+                // Only execute this stage when building from the `internal`, `alpha` or `beta` branch
+                anyOf {
+                    branch 'internal'
+                    branch 'alpha'
+                    branch 'beta'
+                }
+            }
+            sh "rm app/keystore.jks"
+        }
 	}
 	post {
 		failure {
