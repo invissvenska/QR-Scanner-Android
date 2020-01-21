@@ -87,11 +87,6 @@ pipeline {
 				}
 			}
 			environment {
-				// Assuming a file credential has been added to Jenkins, with the ID 'my-app-signing-keystore',
-				// this will export an environment variable during the build, pointing to the absolute path of
-				// the stored Android keystore file.  When the build ends, the temporarily file will be removed.
-				SIGNING_KEYSTORE = credentials('qrscanner-signing-keystore')
-
 				//Password of the keystore
 				SIGNING_KEYSTORE_PASSWORD = credentials('qrscanner-signing-keystore-password')
 
@@ -102,8 +97,9 @@ pipeline {
 				SIGNING_KEY_PASSWORD = credentials('qrscanner-signing-password')
 			}
 			steps {
+			    //prepare certificate
 			    withCredentials([file(credentialsId: 'qrscanner-signing-keystore', variable: 'KEYFILE')]) {
-                     sh "cp \$KEYFILE app/keystore.jks"
+                     sh "cp \$KEYFILE app/qrscanner-keystore.jks"
                 }
 
 				// Build the app in release mode, and sign the AAB using the environment variables
@@ -135,7 +131,7 @@ pipeline {
                 }
             }
             steps {
-                sh "rm app/keystore.jks"
+                sh "rm app/qrscanner-keystore.jks"
             }
         }
 	}
