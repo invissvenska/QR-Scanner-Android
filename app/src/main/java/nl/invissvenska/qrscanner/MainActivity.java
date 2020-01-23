@@ -155,8 +155,13 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     }
 
     private void openInBrowser(String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
+        try {
+            Uri uri = Uri.parse(url);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri.normalizeScheme());
+            startActivity(browserIntent);
+        } catch (Exception e) {
+            Toast.makeText(this, getResources().getString(R.string.malformed_url), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void shareIntent(String text) {
