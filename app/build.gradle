@@ -7,8 +7,8 @@ android {
         applicationId "nl.invissvenska.qrscanner"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 3
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -21,7 +21,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -40,9 +41,8 @@ android {
             enableSplit true
         }
         language {
-            // This is disabled so that the App Bundle does NOT split the APK for each language.
-            // We're gonna use the same APK for all languages.
-            enableSplit false
+            // Different APKs are generated for languages; false by default.
+            enableSplit true
         }
     }
 }
