@@ -8,4 +8,11 @@
         android:orderInCategory="200"
         android:title="@string/toolbar_flash"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu"
+        android:icon="@drawable/ic_history"
+        android:orderInCategory="300"
+        android:title="@string/toolbar_flash"
+        app:showAsAction="ifRoom" />
 </menu>
