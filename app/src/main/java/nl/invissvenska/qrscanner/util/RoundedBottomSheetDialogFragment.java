@@ -1,4 +1,4 @@
-package nl.invissvenska.qrscanner;
+package nl.invissvenska.qrscanner.util;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import nl.invissvenska.qrscanner.R;
 
 public class RoundedBottomSheetDialogFragment extends BottomSheetDialogFragment {
 

@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".QRTileService"
+            android:name=".service.QRTileService"
             android:icon="@drawable/ic_qrcode"
             android:label="@string/tile_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">

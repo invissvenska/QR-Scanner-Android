@@ -1,4 +1,4 @@
-package nl.invissvenska.qrscanner;
+package nl.invissvenska.qrscanner.service;
 
 import android.content.Intent;
 import android.service.quicksettings.TileService;
