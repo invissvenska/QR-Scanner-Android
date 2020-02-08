@@ -20,20 +20,30 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.navigation.NavigationView;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import nl.invissvenska.qrscanner.database.model.HistoryModel;
+import nl.invissvenska.qrscanner.database.table.History;
+import nl.invissvenska.qrscanner.util.HistoryAdapter;
+import nl.invissvenska.qrscanner.util.RoundedBottomSheetDialogFragment;
 
 public class MainActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView scanner;
     private DrawerLayout drawerLayout;
+    private HistoryAdapter adapter;
+    private HistoryModel model;
 
     RoundedBottomSheetDialogFragment sheetDialog;
 
@@ -42,10 +52,18 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         scanner = findViewById(R.id.scanner);
-        setScannerProperties();
-
-
         drawerLayout = findViewById(R.id.drawer_layout);
+        createDrawerLayout();
+        setScannerProperties();
+        fillDrawerLayout();
+    }
+
+    private void fillDrawerLayout() {
+        model = new ViewModelProvider(this).get(HistoryModel.class);
+        model.getAllHistory().observe(this, histories -> adapter.setHistories(histories));
+    }
+
+    private void createDrawerLayout() {
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.copied_result) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -60,23 +78,10 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-            switch (id) {
-                case R.id.nav_home:
-                    Toast.makeText(MainActivity.this, "My Account", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.nav_gallery:
-                    Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    return true;
-            }
-            return true;
-        });
+        RecyclerView recyclerView = findViewById(R.id.history_list);
+        adapter = new HistoryAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -158,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             );
             FragmentManager fm = getSupportFragmentManager();
             sheetDialog.show(fm, "modalSheetDialog");
+            model.insert(new History(LocalDate.now(), result.getText()));
         }
     }
 
@@ -194,6 +200,10 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
     @Override
     public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(GravityCompat.END);
+            return;
+        }
         super.onBackPressed();
         if (sheetDialog != null) {
             scanner.setResultHandler(null);
