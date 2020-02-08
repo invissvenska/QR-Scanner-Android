@@ -21,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,9 +80,23 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         RecyclerView recyclerView = findViewById(R.id.history_list);
-        adapter = new HistoryAdapter(this);
+        adapter = new HistoryAdapter(this, value -> {
+            sheetDialog = new RoundedBottomSheetDialogFragment(
+                    value,
+                    MainActivity.this::openInBrowser,
+                    MainActivity.this::shareIntent,
+                    (String copyResult) -> {
+                        copyToClipboard(copyResult);
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.copied_result), Toast.LENGTH_SHORT).show();
+                    },
+                    MainActivity.this::onResume
+            );
+            FragmentManager fm = getSupportFragmentManager();
+            sheetDialog.show(fm, "modalSheetDialog");
+        });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
     @Override

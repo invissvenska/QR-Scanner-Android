@@ -18,10 +18,12 @@ import nl.invissvenska.qrscanner.database.table.History;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
     private final LayoutInflater inflater;
-    private List<History> histories; // Cached copy of histories
+    private List<History> histories;
+    private OnItemClickListener itemClickListener;
 
-    public HistoryAdapter(Context context) {
+    public HistoryAdapter(Context context, OnItemClickListener itemClickListener) {
         inflater = LayoutInflater.from(context);
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -42,9 +44,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             } else {
                 holder.value.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_url, 0, 0, 0);
             }
-        } else {
-            // Covers the case of data not being ready yet.
-            holder.value.setText("No Word");
         }
     }
 
@@ -62,14 +61,24 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         }
     }
 
-    class HistoryViewHolder extends RecyclerView.ViewHolder {
+    class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView date;
         private final TextView value;
 
-        public HistoryViewHolder(@NonNull View itemView) {
+        HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.date);
             value = itemView.findViewById(R.id.barcode);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            itemClickListener.onItemClickListener(histories.get(getAdapterPosition()).getValue());
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClickListener(String value);
     }
 }
