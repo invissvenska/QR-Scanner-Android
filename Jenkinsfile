@@ -107,11 +107,13 @@ pipeline {
 
 				// Archive the AABs so that they can be downloaded from Jenkins
 				archiveArtifacts '**/*.aab'
+				archiveArtifacts '**/mapping.txt'
 
 				// Upload the AAB to Google Play
                 androidApkUpload googleCredentialsId: 'Google Play',
                     filesPattern: '**/bundle/release/app-release.aab',
                     trackName: env.BRANCH_NAME,
+                    deobfuscationFilesPattern: '**/build/outputs/**/mapping.txt',
                      recentChangeList: [
                          [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
                      ]
