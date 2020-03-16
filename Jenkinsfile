@@ -107,12 +107,16 @@ pipeline {
 
 				// Archive the AABs so that they can be downloaded from Jenkins
 				archiveArtifacts '**/*.aab'
+				archiveArtifacts '**/mapping.txt'
 
 				// Upload the AAB to Google Play
-                androidAabUpload googleCredentialsId: 'Google Play', applicationId: 'nl.invissvenska.qrscanner', aabFilesPattern: '**/bundle/release/app-release.aab', trackName: env.BRANCH_NAME,
-                    recentChangeList: [
-                        [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
-                    ]
+                androidApkUpload googleCredentialsId: 'Google Play',
+                    filesPattern: '**/bundle/release/app-release.aab',
+                    trackName: env.BRANCH_NAME,
+                    deobfuscationFilesPattern: '**/build/outputs/**/mapping.txt',
+                     recentChangeList: [
+                         [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
+                     ]
 			}
 			post {
 				success {
