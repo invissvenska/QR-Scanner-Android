@@ -109,8 +109,7 @@ pipeline {
 				archiveArtifacts '**/*.aab'
 
 				// Upload the AAB to Google Play
-                androidApkUpload
-                    googleCredentialsId: 'Google Play',
+                androidApkUpload googleCredentialsId: 'Google Play',
                     filesPattern: '**/bundle/release/app-release.aab',
                     trackName: env.BRANCH_NAME,
                      recentChangeList: [
