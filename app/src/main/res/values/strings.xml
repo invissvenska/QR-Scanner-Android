@@ -9,4 +9,6 @@
     <string name="modal_option_share">Share</string>
     <string name="modal_option_copy">Copy</string>
     <string name="toolbar_flash">Flash</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>
