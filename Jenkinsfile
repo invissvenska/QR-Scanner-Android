@@ -109,10 +109,14 @@ pipeline {
 				archiveArtifacts '**/*.aab'
 
 				// Upload the AAB to Google Play
-                androidAabUpload googleCredentialsId: 'Google Play', applicationId: 'nl.invissvenska.qrscanner', aabFilesPattern: '**/bundle/release/app-release.aab', trackName: env.BRANCH_NAME,
-                    recentChangeList: [
-                        [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
-                    ]
+//                androidAabUpload googleCredentialsId: 'Google Play', applicationId: 'nl.invissvenska.qrscanner', aabFilesPattern: '**/bundle/release/app-release.aab', trackName: env.BRANCH_NAME,
+//                    recentChangeList: [
+//                        [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
+//                    ]
+                androidApkUpload googleCredentialsId: 'Google Play', applicationId: 'nl.invissvenska.qrscanner', filesPattern: '**/bundle/release/app-release.aab', trackName: env.BRANCH_NAME,
+                     recentChangeList: [
+                         [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
+                     ]
 			}
 			post {
 				success {
