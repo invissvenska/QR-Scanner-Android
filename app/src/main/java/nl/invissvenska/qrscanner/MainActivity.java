@@ -36,6 +36,7 @@ import java.util.List;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import nl.invissvenska.qrscanner.database.model.HistoryModel;
 import nl.invissvenska.qrscanner.database.table.History;
+import nl.invissvenska.qrscanner.util.EmptyRecyclerView;
 import nl.invissvenska.qrscanner.util.HistoryAdapter;
 import nl.invissvenska.qrscanner.util.RoundedBottomSheetDialogFragment;
 
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        RecyclerView recyclerView = findViewById(R.id.history_list);
+        EmptyRecyclerView recyclerView = findViewById(R.id.history_list);
         adapter = new HistoryAdapter(this, value -> {
             sheetDialog = new RoundedBottomSheetDialogFragment(
                     value,
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.setEmptyView(findViewById(R.id.empty_view));
     }
 
     @Override
