@@ -84,7 +84,7 @@ pipeline {
 			when {
 			    // Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
                 expression {
-                    return DEPLOY_TRACK != 'none'
+                    return params.DEPLOY_TRACK != 'none'
                 }
             }
 			environment {
@@ -113,7 +113,7 @@ pipeline {
 				// Upload the AAB to Google Play
                 androidApkUpload googleCredentialsId: 'Google Play',
                     filesPattern: '**/bundle/release/app-release.aab',
-                    trackName: DEPLOY_TRACK,
+                    trackName: params.DEPLOY_TRACK,
                     deobfuscationFilesPattern: '**/build/outputs/**/mapping.txt',
                      recentChangeList: [
                          [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
@@ -122,7 +122,7 @@ pipeline {
 			post {
 				success {
 					// Notify if the upload succeeded
-					mail to: 'sven.vd.tweel@gmail.com', subject: 'New build available in ' + DEPLOY_TRACK + '!', body: 'Check it out!'
+					mail to: 'sven.vd.tweel@gmail.com', subject: 'New build available in ' + params.DEPLOY_TRACK + '!', body: 'Check it out!'
 				}
 			}
 		}
@@ -130,7 +130,7 @@ pipeline {
             when {
                 // Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
                 expression {
-                    return DEPLOY_TRACK != 'none'
+                    return params.DEPLOY_TRACK != 'none'
                 }
             }
             steps {
