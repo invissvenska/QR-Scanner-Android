@@ -7,6 +7,9 @@ pipeline {
 		// Run on a build agent where we have the Android SDK installed
 		label 'master'
 	}
+	parameters {
+        choice(defaultValue: 'none', choices: ['none', 'internal', 'alpha', 'beta'], description: 'Deploy app to selected track', name: 'DEPLOY_TRACK')
+    }
 	environment {
 		ANDROID_SDK_ROOT = "/home/sven"
 	}
@@ -79,12 +82,15 @@ pipeline {
 		}
 		stage('Deploy') {
 			when {
+			    expression {
+                    return DEPLOY_TRACK != 'none'
+                }
 				// Only execute this stage when building from the `internal`, `alpha` or `beta` branch
-				anyOf {
-				    branch 'internal'
-				    branch 'alpha'
-				    branch 'beta'
-				}
+				//anyOf {
+				//    branch 'internal'
+				//    branch 'alpha'
+				//    branch 'beta'
+				//}
 			}
 			environment {
 				//Password of the keystore
@@ -112,7 +118,7 @@ pipeline {
 				// Upload the AAB to Google Play
                 androidApkUpload googleCredentialsId: 'Google Play',
                     filesPattern: '**/bundle/release/app-release.aab',
-                    trackName: env.BRANCH_NAME,
+                    trackName: DEPLOY_TRACK,
                     deobfuscationFilesPattern: '**/build/outputs/**/mapping.txt',
                      recentChangeList: [
                          [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
@@ -121,18 +127,21 @@ pipeline {
 			post {
 				success {
 					// Notify if the upload succeeded
-					mail to: 'sven.vd.tweel@gmail.com', subject: 'New build available in ' + env.BRANCH_NAME + '!', body: 'Check it out!'
+					mail to: 'sven.vd.tweel@gmail.com', subject: 'New build available in ' + DEPLOY_TRACK + '!', body: 'Check it out!'
 				}
 			}
 		}
 		stage('Cleanup Credential') {
             when {
-                // Only execute this stage when building from the `internal`, `alpha` or `beta` branch
-                anyOf {
-                    branch 'internal'
-                    branch 'alpha'
-                    branch 'beta'
+                expression {
+                    return DEPLOY_TRACK != 'none'
                 }
+                // Only execute this stage when building from the `internal`, `alpha` or `beta` branch
+                //anyOf {
+                //    branch 'internal'
+                //    branch 'alpha'
+                //    branch 'beta'
+                //}
             }
             steps {
                 sh "rm app/qrscanner-keystore.jks"
