@@ -82,15 +82,10 @@ pipeline {
 		}
 		stage('Deploy') {
 			when {
+			    // Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
                 expression {
                     return DEPLOY_TRACK != 'none'
                 }
-                // Only execute this stage when building from the `internal`, `alpha` or `beta` branch
-                //anyOf {
-                //    branch 'internal'
-                //    branch 'alpha'
-                //    branch 'beta'
-                //}
             }
 			environment {
 				//Password of the keystore
@@ -133,15 +128,10 @@ pipeline {
 		}
 		stage('Cleanup Credential') {
             when {
+                // Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
                 expression {
                     return DEPLOY_TRACK != 'none'
                 }
-                // Only execute this stage when building from the `internal`, `alpha` or `beta` branch
-                //anyOf {
-                //    branch 'internal'
-                //    branch 'alpha'
-                //    branch 'beta'
-                //}
             }
             steps {
                 sh "rm app/qrscanner-keystore.jks"
