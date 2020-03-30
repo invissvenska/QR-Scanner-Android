@@ -15,7 +15,7 @@ import java.util.List;
 import nl.invissvenska.qrscanner.R;
 import nl.invissvenska.qrscanner.database.table.History;
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
+public class HistoryAdapter extends EmptyRecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
     private final LayoutInflater inflater;
     private List<History> histories;
