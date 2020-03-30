@@ -9,4 +9,7 @@
     <string name="modal_option_share">Share</string>
     <string name="modal_option_copy">Copy</string>
     <string name="toolbar_flash">Flash</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="empty_history">When you scan a code it will appear here so you can open or copy the contents again.</string>
 </resources>
