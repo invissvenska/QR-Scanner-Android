@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
