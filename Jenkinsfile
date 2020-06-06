@@ -8,8 +8,8 @@ pipeline {
 		label 'master'
 	}
 	parameters {
-        choice(choices: ['none', 'internal', 'alpha', 'beta'], description: 'Deploy app to selected track', name: 'DEPLOY_TRACK')
-    }
+		choice(choices: ['none', 'internal', 'alpha', 'beta'], description: 'Deploy app to selected track', name: 'DEPLOY_TRACK')
+	}
 	environment {
 		ANDROID_SDK_ROOT = "/home/sven"
 	}
@@ -22,42 +22,61 @@ pipeline {
 	}
 	stages {
 		stage('Compile') {
-		    when {
-                // Only execute this stage when building from the `develop` or `feature/*` branch
-                anyOf {
-                    branch 'develop'
-                    branch 'feature/*'
-                }
-            }
+			when {
+				// Only execute this stage when building from the `develop` or `feature/*` branch
+				anyOf {
+					branch 'develop'
+					branch 'feature/*'
+				}
+			}
 			steps {
 				// Compile the app and its dependencies
 				sh 'bash ./gradlew compileDebugSources'
 			}
 		}
-		stage('Unit test') {
-		    when {
-                // Only execute this stage when building from the `develop` or `feature/*` branch
-                anyOf {
-                    branch 'develop'
-                    branch 'feature/*'
-                }
-            }
-			steps {
-				// Compile and run the unit tests for the app and its dependencies
-				sh 'bash ./gradlew testDebugUnitTest testDebugUnitTest'
 
-				// Analyse the test results and update the build result as appropriate
-				junit '**/TEST-*.xml'
+		stage('Tests') {
+			parallel {
+				stage('Unit test') {
+					when {
+						// Only execute this stage when building from the `develop` or `feature/*` branch
+						anyOf {
+							branch 'develop'
+							branch 'feature/*'
+						}
+					}
+					steps {
+						// Compile and run the unit tests for the app and its dependencies
+						sh 'bash ./gradlew testDebugUnitTest testDebugUnitTest'
+
+						// Analyse the test results and update the build result as appropriate
+						junit '**/TEST-*.xml'
+					}
+				}
+				stage('Static analysis') {
+					when {
+						// Only execute this stage when building from the `develop` or `feature/*` branch
+						anyOf {
+							branch 'develop'
+							branch 'feature/*'
+						}
+					}
+					steps {
+						// Run Lint and analyse the results
+						sh 'bash ./gradlew lintDebug'
+						androidLint pattern: '**/lint-results-*.xml'
+					}
+				}
 			}
 		}
 		stage('Build APK') {
-		    when {
-                // Only execute this stage when building from the `develop` or `feature/*` branch
-                anyOf {
-                    branch 'develop'
-                    branch 'feature/*'
-                }
-            }
+			when {
+				// Only execute this stage when building from the `develop` or `feature/*` branch
+				anyOf {
+					branch 'develop'
+					branch 'feature/*'
+				}
+			}
 			steps {
 				// Finish building and packaging the APK
 				sh 'bash ./gradlew assembleDebug'
@@ -66,42 +85,28 @@ pipeline {
 				archiveArtifacts '**/*.apk'
 			}
 		}
-		stage('Static analysis') {
-		    when {
-                // Only execute this stage when building from the `develop` or `feature/*` branch
-                anyOf {
-                    branch 'develop'
-                    branch 'feature/*'
-                }
-            }
-			steps {
-				// Run Lint and analyse the results
-				sh 'bash ./gradlew lintDebug'
-				androidLint pattern: '**/lint-results-*.xml'
-			}
-		}
 		stage('Deploy') {
 			when {
-			    // Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
-                expression {
-                    return params.DEPLOY_TRACK != 'none'
-                }
-            }
+				// Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
+				expression {
+					return params.DEPLOY_TRACK != 'none'
+				}
+			}
 			environment {
 				//Password of the keystore
 				SIGNING_KEYSTORE_PASSWORD = credentials('qrscanner-signing-keystore-password')
 
-                //Keystore alias
-                SIGNING_KEYSTORE_ALIAS = credentials('qrscanner-signing-keystore-alias')
+				//Keystore alias
+				SIGNING_KEYSTORE_ALIAS = credentials('qrscanner-signing-keystore-alias')
 
 				// Similarly, the value of this variable will be a password stored by the Credentials Plugin
 				SIGNING_KEY_PASSWORD = credentials('qrscanner-signing-password')
 			}
 			steps {
-			    //prepare certificate
-			    withCredentials([file(credentialsId: 'qrscanner-signing-keystore', variable: 'KEYFILE')]) {
-                     sh "cp \$KEYFILE app/qrscanner-keystore.jks"
-                }
+				//prepare certificate
+				withCredentials([file(credentialsId: 'qrscanner-signing-keystore', variable: 'KEYFILE')]) {
+					sh "cp \$KEYFILE app/qrscanner-keystore.jks"
+				}
 
 				// Build the app in release mode, and sign the AAB using the environment variables
 				sh 'bash ./gradlew app:bundleRelease'
@@ -111,13 +116,13 @@ pipeline {
 				archiveArtifacts '**/mapping.txt'
 
 				// Upload the AAB to Google Play
-                androidApkUpload googleCredentialsId: 'Google Play',
-                    filesPattern: '**/bundle/release/app-release.aab',
-                    trackName: params.DEPLOY_TRACK,
-                    deobfuscationFilesPattern: '**/build/outputs/**/mapping.txt',
-                     recentChangeList: [
-                         [language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
-                     ]
+				androidApkUpload googleCredentialsId: 'Google Play',
+					filesPattern: '**/bundle/release/app-release.aab',
+					trackName: params.DEPLOY_TRACK,
+					deobfuscationFilesPattern: '**/build/outputs/**/mapping.txt',
+					recentChangeList: [
+						[language: 'en-US', text: "Please test the changes from Jenkins build ${env.BUILD_NUMBER}."]
+					]
 			}
 			post {
 				success {
@@ -127,16 +132,16 @@ pipeline {
 			}
 		}
 		stage('Cleanup Credential') {
-            when {
-                // Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
-                expression {
-                    return params.DEPLOY_TRACK != 'none'
-                }
-            }
-            steps {
-                sh "rm app/qrscanner-keystore.jks"
-            }
-        }
+			when {
+				// Only execute this stage when selected DEPLOY_TRACK is `internal`, `alpha` or `beta`
+				expression {
+					return params.DEPLOY_TRACK != 'none'
+				}
+			}
+			steps {
+				sh "rm app/qrscanner-keystore.jks"
+			}
+		}
 	}
 	post {
 		failure {
