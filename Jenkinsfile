@@ -1,3 +1,3 @@
 @Library('SharedLibrary')_
 
-androidPipeline()
+androidPipeline(emailRecipient: 'sven.vd.tweel@gmail.com')
