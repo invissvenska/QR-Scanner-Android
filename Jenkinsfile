@@ -5,6 +5,6 @@ androidPipeline(emailRecipients: 'sven.vd.tweel@gmail.com',
     credentialsGooglePlayId: 'Google Play',
     signingKeystorePassword: 'qrscanner-signing-keystore-password',
     signingKeystoreAlias: 'qrscanner-signing-keystore-alias',
-    signingKeyPassword: 'qrscanner-signing-password',
+    signingPassword: 'qrscanner-signing-password',
     signingKeystoreFileId: 'qrscanner-signing-keystore',
     signingKeystoreFile: 'qrscanner-keystore.jks')
