@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">QR and Barcode Scanner</string>
+    <string name="tile_name">QR Scanner</string>
+    <string name="copied_result">Result copied to clipboard</string>
+    <string name="malformed_url">Could not open browser due malformed url</string>
+    <string name="share_title">Choose your app</string>
+    <string name="modal_result_title">Result</string>
+    <string name="modal_option_browser">Open website</string>
+    <string name="modal_option_share">Share</string>
+    <string name="modal_option_copy">Copy</string>
+    <string name="toolbar_flash">Flash</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="empty_history">When you scan a code it will appear here so you can open or copy the contents again.</string>
+</resources>
