@@ -45,6 +45,7 @@ android {
             enableSplit true
         }
     }
+    namespace 'nl.invissvenska.qrscanner'
 }
 
 dependencies {
